@@ -1,65 +1,45 @@
-#MMAE 350 Homework #6
+#MMAE 350 Homework #6 Problem #5b
 #Michael Gromski
+#Note: There is error in the optimization root function causing the 
+#      Associated velocity on the chart to not be accurate/clean 
+#      changing the inital guess affects how it will turn out. 
 
 import matplotlib.pyplot as plt
-import scipy
 from scipy import optimize
-
-
 
 print("")
 print("-"*50)
 print("Problem 5: Drag force on an airfoil")
 
-def Weight(W):
-    Wei = W
-    return Wei
 def DragForce(U):
-    totalDrag = 0.006*U**2 + (0.95/0.6)*(Weight(W)/U)**2
+    totalDrag = 0.006*U**2 + (0.95/0.6)*(W/U)**2    #primary function given 
     return totalDrag
 Grav_force = []
 U_min = []
 force_drag = []
-for i in range(12000,20001):
-    Grav_force.append(i) # This will be our X-axis
-    W = i
-    wtf = optimize.root(DragForce,1)
-    U_min.append(wtf.x)
-    force_drag.append(DragForce(wtf.x))
-
-def make_patch_spines_invisible(ax):
-    ax.set_frame_on(True)
-    ax.patch.set_visible(False)
-    for sp in ax.spines.values():
-        sp.set_visible(False)
-
+for i in range(12000,20001):                        #range depends on weight range
+    Grav_force.append(i)                            #This will be our X-axis
+    W = i                                           #Set our weight value
+    DF = optimize.root(DragForce,500)               
+    U_min.append(DF.x)
+    force_drag.append(DragForce(DF.x))
 
 fig, host = plt.subplots()
 fig.subplots_adjust(right=0.75)
 
 par1 = host.twinx()
-par2 = host.twinx()
 
-par2.spines["right"].set_position(("axes", 1.2))
-# Having been created by twinx, par2 has its frame off, so the line of its
-# detached spine is invisible.  First, activate the frame but make the patch
-# and spines invisible.
-make_patch_spines_invisible(par2)
-# Second, show the right spine.
-par2.spines["right"].set_visible(False)
-
-p1, = host.plot(Grav_force, force_drag, "b-", label="Fd")
-p2, = par1.plot(Grav_force, U_min, "r-", label="U_min")
-
+p1, = host.plot(Grav_force, force_drag, "b-", label="Drag Force")
+p2, = par1.plot(Grav_force, U_min, "r-", label="Associated Velocity")
 
 host.set_xlim(12000, 20000)
 host.set_ylim(2250, 4000)
 par1.set_ylim(440, 575)
 
+host.set_title("Corresponding Drag and Velocity to Weight")
 host.set_xlabel("Weight")
-host.set_ylabel("Fd")
-par1.set_ylabel("U_min")
-
+host.set_ylabel("Minimum Drag Force")
+par1.set_ylabel("Velocity")
 
 host.yaxis.label.set_color(p1.get_color())
 par1.yaxis.label.set_color(p2.get_color())
