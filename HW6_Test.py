@@ -1,8 +1,5 @@
-#MMAE 350 Homework #6 Problem #5b
-#Michael Gromski
-#Note: There is error in the optimization root function causing the 
-#      Associated velocity on the chart to not be accurate/clean 
-#      changing the inital guess affects how it will turn out. 
+#MMAE 350 Homework #6 Problem #6d
+#Michael Gromski 
 
 import matplotlib.pyplot as plt
 from scipy import optimize
@@ -20,9 +17,9 @@ force_drag = []
 for i in range(12000,20001):                        #range depends on weight range
     Grav_force.append(i)                            #This will be our X-axis
     W = i                                           #Set our weight value
-    DF = optimize.root(DragForce,500)               
-    U_min.append(DF.x)
-    force_drag.append(DragForce(DF.x))
+    DF = optimize.fminbound(DragForce,300,700)               
+    U_min.append(DF)
+    force_drag.append(DragForce(DF))
 
 fig, host = plt.subplots()
 fig.subplots_adjust(right=0.75)
